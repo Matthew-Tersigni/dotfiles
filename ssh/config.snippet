@@ -1,0 +1,15 @@
+# Append to ~/.ssh/config (export-secrets already copies your real config).
+# Host alias used by personal repos: git@personal-github:Matthew-Tersigni/...
+
+Host personal-github
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/ters_tech
+  IdentitiesOnly yes
+
+# Optional: Magnet bastions / SSM (from EC2) — needs AWS SSO profiles imported
+# Host saas-dev-1
+#   User ubuntu
+#   PubkeyAuthentication yes
+#   IdentityFile ~/.ssh/id_rsa
+#   ProxyCommand aws ssm start-session --profile dev_review --target i-07fca96d9d4842e0d --region us-east-1 --document-name AWS-StartSSHSession --parameters portNumber=%p

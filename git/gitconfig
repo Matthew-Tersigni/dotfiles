@@ -1,0 +1,16 @@
+[credential]
+	helper = /usr/local/bin/git-credential-manager
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[user]
+	name = Matt Tersigni
+	email = matt.tersigni@magnetforensics.com
+[core]
+	autocrlf = input
+	editor = vim
+[rerere]
+	enabled = true
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main

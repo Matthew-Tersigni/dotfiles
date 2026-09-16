@@ -1,0 +1,31 @@
+# Non-git paths under ~/work worth taking to WSL.
+# One path per line, relative to $HOME. Comments/blank lines ignored.
+# Consumed by: bin/export-work-extras.sh (also run from export-secrets.sh)
+
+# --- KEEP: small / irreplaceable ---
+work/AI_PLANNING_AND_NOTES
+work/idempotent-batch-processor
+work/swagger-docs
+work/git_summaries
+work/virtualized-dictionary-list
+work/media-sharing-system-design-interview.md
+work/api_case_deletion.sh
+work/git_weekly_summary.sh
+work/.cursorrules
+work/.csharpierrc.json
+
+# Helper scripts only (NOT scripts/cases — that is a multi-GB Axiom dump)
+work/scripts/auth_deadlock_herd.py
+work/scripts/uploadEvidence.sh
+
+# --- OPTIONAL (uncomment if you want them; they are fat) ---
+# work/NubisVoxelCloudsPack.zip   # ~111M drift art
+# work/investigations             # ~6G axiom logs
+# work/test_cases                 # ~31G evidence — do NOT scp unless you must
+# work/bgfx-test                  # recloned via ./bin/clone-repos.sh --all
+# work/WorkEnv                    # recreated by bootstrap python
+# work/magnet-review-hub-2279     # duplicate checkout
+# work/magnet-review-hub-2417
+# work/magnet-review-re-12156-ci-fix
+# work/magnet-review-re-12766
+# work/scripts/cases              # Axiom case outputs — huge, leave behind

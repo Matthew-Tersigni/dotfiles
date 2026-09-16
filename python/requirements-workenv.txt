@@ -1,0 +1,7 @@
+# Core packages that make the EC2 WorkEnv feel right.
+# After bootstrap, run: bin/export-workenv.sh  to capture a full freeze from this machine.
+thefuck>=3.32
+virtualenvwrapper>=6.0
+pip
+setuptools
+wheel

@@ -1,0 +1,12 @@
+# Machine-local overrides — NOT committed (see .gitignore pattern via copy to ~)
+# Copy to ~/.zshrc.local by link.sh
+
+# export DOTFILES_VERBOSE=1
+# export DOTFILES_START_MYSQL=1
+# export DOTFILES_SHOW_CLUSTER_STATUS=1
+# export DOTFILES_TUNE_INOTIFY=1
+# export DOTFILES_AUTO_WORKON=1
+
+# export CODE_ROOT="$HOME/work"
+# export AWS_PROFILE=dev_review
+# export DOTFILES_DIR="$HOME/dotfiles"

@@ -1,0 +1,20 @@
+# Never commit secrets
+secrets/**
+!secrets/.gitkeep
+*.tgz
+*.tar.gz
+*.gpg
+*.asc
+
+# Full pip freezes can include private index URLs — keep local unless you scrub them
+python/requirements-workenv.full.txt
+
+# Local machine overrides
+zsh/zshrc.local
+.gitconfig.local
+
+# OS junk
+.DS_Store
+Thumbs.db
+*.swp
+*~
