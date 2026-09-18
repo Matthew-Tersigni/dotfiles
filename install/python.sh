@@ -66,21 +66,23 @@ fi
 [[ -n "$VW" ]] || { warn "virtualenvwrapper.sh not found"; exit 1; }
 
 # virtualenvwrapper references ZSH_VERSION; under bash + set -u that explodes.
+# Keep nounset off for the rest of this script — vw hooks are sloppy with unset vars.
 set +u
 # shellcheck disable=SC1090
 source "$VW"
-set -u
 
-if ! lsvirtualenv -b 2>/dev/null | grep -qx WorkEnv; then
-  log "Creating WorkEnv virtualenv"
-  set +u
-  mkvirtualenv -p "$PYENV_PYTHON" WorkEnv
-  set -u
-else
+if [[ -d "$WORKON_HOME/WorkEnv" ]]; then
   log "WorkEnv already exists"
-  set +u
   workon WorkEnv || true
-  set -u
+else
+  log "Creating WorkEnv virtualenv"
+  # mkvirtualenv often exits non-zero after success (hook noise) — judge by dest dir.
+  mkvirtualenv -p "$PYENV_PYTHON" WorkEnv || true
+  if [[ ! -d "$WORKON_HOME/WorkEnv" ]]; then
+    warn "mkvirtualenv did not create $WORKON_HOME/WorkEnv"
+    exit 1
+  fi
+  workon WorkEnv || true
 fi
 
 if [[ -f "$REQUIREMENTS" ]]; then
@@ -95,3 +97,4 @@ if [[ -f "$DOTFILES_ROOT/python/requirements-workenv.full.txt" ]]; then
 fi
 
 log "Python stack ready (pyenv=$PYTHON_VERSION, WorkEnv at $WORKON_HOME/WorkEnv)"
+set -u
