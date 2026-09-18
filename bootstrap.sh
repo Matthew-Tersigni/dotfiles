@@ -64,10 +64,13 @@ log "Stages: ${STAGES[*]}"
 failed_stages=()
 for stage in "${STAGES[@]}"; do
   log "──── stage: $stage ────"
-  if ! run_stage "$stage"; then
-    warn "Stage '$stage' FAILED (exit $?)"
+  set +e
+  run_stage "$stage"
+  stage_status=$?
+  set -e
+  if (( stage_status != 0 )); then
+    warn "Stage '$stage' FAILED (exit ${stage_status})"
     failed_stages+=("$stage")
-    # Don't abort the whole bootstrap — finish what we can, report at the end.
     continue
   fi
   log "──── stage: $stage OK ────"

@@ -65,15 +65,22 @@ if [[ -z "$VW" ]]; then
 fi
 [[ -n "$VW" ]] || { warn "virtualenvwrapper.sh not found"; exit 1; }
 
+# virtualenvwrapper references ZSH_VERSION; under bash + set -u that explodes.
+set +u
 # shellcheck disable=SC1090
 source "$VW"
+set -u
 
 if ! lsvirtualenv -b 2>/dev/null | grep -qx WorkEnv; then
   log "Creating WorkEnv virtualenv"
+  set +u
   mkvirtualenv -p "$PYENV_PYTHON" WorkEnv
+  set -u
 else
   log "WorkEnv already exists"
+  set +u
   workon WorkEnv || true
+  set -u
 fi
 
 if [[ -f "$REQUIREMENTS" ]]; then
