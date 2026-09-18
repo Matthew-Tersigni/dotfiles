@@ -36,13 +36,42 @@ if [[ -f "$DOTFILES_ROOT/zsh/antigen.zsh" ]]; then
 fi
 
 # Review bash extensions symlink (EC2 had ~/.review_bash_extensions → magnet-review/scripts/...)
-CODE_ROOT="${CODE_ROOT:-$HOME/work}"
-REVIEW_EXT_SRC="${CODE_ROOT}/magnet-review/scripts/bash_extensions"
-if [[ -d "$REVIEW_EXT_SRC" ]]; then
+# Prefer an existing clone over a stale/wrong CODE_ROOT from the environment.
+if [[ -z "${CODE_ROOT:-}" ]]; then
+  CODE_ROOT="$HOME/work"
+fi
+
+REVIEW_EXT_SRC=""
+for candidate in \
+  "$CODE_ROOT/magnet-review/scripts/bash_extensions" \
+  "$HOME/work/magnet-review/scripts/bash_extensions" \
+  "$HOME/magnet-review/scripts/bash_extensions"; do
+  if [[ -d "$candidate" ]]; then
+    REVIEW_EXT_SRC="$candidate"
+    break
+  fi
+done
+
+if [[ -n "$REVIEW_EXT_SRC" ]]; then
   ln -sfn "$REVIEW_EXT_SRC" "$HOME/.review_bash_extensions"
   log "linked ~/.review_bash_extensions → $REVIEW_EXT_SRC"
+  # Keep CODE_ROOT aligned with wherever magnet-review actually lives
+  CODE_ROOT="$(cd "$REVIEW_EXT_SRC/../../.." && pwd)"
 else
-  warn "magnet-review bash_extensions not found yet — clone repos under \$CODE_ROOT then re-run link.sh"
+  warn "magnet-review bash_extensions not found"
+  warn "  looked under CODE_ROOT=$CODE_ROOT and \$HOME/work"
+  warn "  check: ls \$HOME/work/magnet-review/scripts/bash_extensions"
+fi
+
+# EC2 convenience symlinks into review-local-dev (if present)
+if [[ -d "$CODE_ROOT/review-local-dev/default_configs" ]]; then
+  ln -sfn "$CODE_ROOT/review-local-dev/default_configs" "$CODE_ROOT/default_configs"
+  ln -sfn "$CODE_ROOT/review-local-dev/default_configs" "$HOME/appsettings"
+  log "linked default_configs / appsettings → review-local-dev"
+fi
+if [[ -f "$CODE_ROOT/review-local-dev/dc.yml" ]]; then
+  ln -sfn "$CODE_ROOT/review-local-dev/dc.yml" "$CODE_ROOT/docker-compose.yml"
+  log "linked docker-compose.yml → review-local-dev/dc.yml"
 fi
 
 # Ensure personal-github SSH host exists (full config comes from secrets import)
