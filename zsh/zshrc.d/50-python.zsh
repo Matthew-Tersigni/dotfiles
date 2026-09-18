@@ -35,8 +35,15 @@ if [[ "${DOTFILES_AUTO_WORKON:-1}" == "1" ]] && typeset -f workon >/dev/null 2>&
   fi
 fi
 
+# thefuck 3.32 still imports `imp`, which is gone on Python 3.12+.
+# Don't let a dead package nuke the whole shell.
 if command -v thefuck >/dev/null 2>&1; then
-  dotfiles_log "${BIRed}Setting Up thefuck...\n"
-  eval "$(thefuck --alias fuck)"
-  alias FUCK="fuck --yeah"
+  if _thefuck_init="$(thefuck --alias fuck 2>/dev/null)"; then
+    dotfiles_log "${BIRed}Setting Up thefuck...\n"
+    eval "$_thefuck_init"
+    alias FUCK="fuck --yeah"
+  else
+    dotfiles_log "${Yellow}thefuck broken on this Python (need ≤3.11) — skipping${Color_Off}"
+  fi
+  unset _thefuck_init
 fi

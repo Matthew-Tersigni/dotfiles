@@ -8,7 +8,7 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common.sh"
 
 PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
-PYTHON_VERSION="${DOTFILES_PYTHON_VERSION:-3.12.8}"
+PYTHON_VERSION="${DOTFILES_PYTHON_VERSION:-3.11.11}"
 REQUIREMENTS="$DOTFILES_ROOT/python/requirements-workenv.txt"
 
 log "Installing pyenv build deps"
