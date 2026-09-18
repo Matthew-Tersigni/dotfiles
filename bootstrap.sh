@@ -61,10 +61,24 @@ run_stage() {
 log "Dotfiles bootstrap from $ROOT"
 log "Stages: ${STAGES[*]}"
 
+failed_stages=()
 for stage in "${STAGES[@]}"; do
   log "──── stage: $stage ────"
-  run_stage "$stage"
+  if ! run_stage "$stage"; then
+    warn "Stage '$stage' FAILED (exit $?)"
+    failed_stages+=("$stage")
+    # Don't abort the whole bootstrap — finish what we can, report at the end.
+    continue
+  fi
+  log "──── stage: $stage OK ────"
 done
+
+if ((${#failed_stages[@]} > 0)); then
+  warn "Failed stages: ${failed_stages[*]}"
+  warn "Re-run just the rest, e.g.:"
+  warn "  ./bootstrap.sh node bun dotnet cloud zig gcm link"
+  exit 1
+fi
 
 cat <<'EOF'
 

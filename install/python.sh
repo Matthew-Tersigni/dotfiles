@@ -38,12 +38,12 @@ pyenv global "$PYTHON_VERSION"
 PYENV_PYTHON="$(pyenv which python)"
 log "Using $PYENV_PYTHON"
 
-log "Installing virtualenvwrapper + thefuck into user site"
+log "Installing virtualenvwrapper + thefuck (into pyenv Python)"
 "$PYENV_PYTHON" -m pip install --upgrade pip setuptools wheel
-"$PYENV_PYTHON" -m pip install --user virtualenv virtualenvwrapper thefuck
+# Prefer pyenv's own bin over --user (WSL/Ubuntu PEP 668 + path weirdness)
+"$PYENV_PYTHON" -m pip install virtualenv virtualenvwrapper thefuck
 
-# Ensure ~/.local/bin on PATH for this session
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$(dirname "$PYENV_PYTHON"):$HOME/.local/bin:$PATH"
 
 export WORKON_HOME="${WORKON_HOME:-$HOME/.virtualenvs}"
 export VIRTUALENVWRAPPER_PYTHON="$PYENV_PYTHON"
@@ -52,8 +52,8 @@ ensure_dir "$WORKON_HOME"
 # Locate virtualenvwrapper.sh
 VW=""
 for candidate in \
-  "$HOME/.local/bin/virtualenvwrapper.sh" \
   "$(dirname "$PYENV_PYTHON")/virtualenvwrapper.sh" \
+  "$HOME/.local/bin/virtualenvwrapper.sh" \
   /usr/local/bin/virtualenvwrapper.sh; do
   if [[ -f "$candidate" ]]; then
     VW="$candidate"
@@ -61,7 +61,6 @@ for candidate in \
   fi
 done
 if [[ -z "$VW" ]]; then
-  # pip --user sometimes drops scripts under pyenv's bin
   VW="$(find "$PYENV_ROOT" -name virtualenvwrapper.sh 2>/dev/null | head -1 || true)"
 fi
 [[ -n "$VW" ]] || { warn "virtualenvwrapper.sh not found"; exit 1; }
@@ -74,12 +73,12 @@ if ! lsvirtualenv -b 2>/dev/null | grep -qx WorkEnv; then
   mkvirtualenv -p "$PYENV_PYTHON" WorkEnv
 else
   log "WorkEnv already exists"
-  workon WorkEnv
+  workon WorkEnv || true
 fi
 
 if [[ -f "$REQUIREMENTS" ]]; then
   log "Installing WorkEnv requirements"
-  pip install -r "$REQUIREMENTS"
+  pip install -r "$REQUIREMENTS" || warn "requirements install had issues — continuing"
 fi
 
 # Optional: full freeze from EC2 if you exported it
