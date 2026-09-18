@@ -1,5 +1,6 @@
 # Core packages that make the EC2 WorkEnv feel right.
-# After bootstrap, run: bin/export-workenv.sh  to capture a full freeze from this machine.
+# Prefer Python 3.11.x — thefuck 3.32 still uses `imp` (removed in 3.12).
+# Override: DOTFILES_PYTHON_VERSION=3.12.8 ./bootstrap.sh python
 thefuck>=3.32
 virtualenvwrapper>=6.0
 pip
