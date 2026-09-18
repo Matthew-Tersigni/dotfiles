@@ -8,8 +8,11 @@ if [[ -f "$CODE_ROOT/tools/tool-magnet-internal-workflow/tools.rc" ]]; then
   source "$CODE_ROOT/tools/tool-magnet-internal-workflow/tools.rc"
 fi
 
-# .NET tools
-[[ -d "$HOME/.dotnet/tools" ]] && export PATH="$PATH:$HOME/.dotnet/tools"
+# .NET (dotnet-install.sh puts the SDK in ~/.dotnet)
+if [[ -d "$HOME/.dotnet" ]]; then
+  export DOTNET_ROOT="${DOTNET_ROOT:-$HOME/.dotnet}"
+  export PATH="$DOTNET_ROOT:$DOTNET_ROOT/tools:$PATH"
+fi
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
