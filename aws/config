@@ -1,0 +1,29 @@
+# Generated from EC2 SSO profile metadata (was missing on this machine).
+# Copy to ~/.aws/config on WSL.
+
+[sso-session magnet]
+sso_start_url = https://d-906772dfac.awsapps.com/start
+sso_region = us-east-1
+sso_registration_scopes = sso:account:access
+
+[profile dev_review]
+sso_session = magnet
+sso_account_id = 817772630816
+sso_role_name = Magnet-ContributorAccess
+region = us-east-1
+output = json
+
+[profile sta_review_saas]
+sso_session = magnet
+sso_account_id = 495435048442
+sso_role_name = Magnet-ContributorAccess
+region = us-east-1
+output = json
+
+# Optional — uncomment if you use prod ECR sync
+# [profile prd_review_saas]
+# sso_session = magnet
+# sso_account_id = 894622485220
+# sso_role_name = Magnet-ContributorAccess
+# region = us-east-1
+# output = json
