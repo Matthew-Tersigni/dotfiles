@@ -37,6 +37,8 @@ fi
 
 # thefuck 3.32 still imports `imp`, which is gone on Python 3.12+.
 # Don't let a dead package nuke the whole shell.
+# Skip /mnt so `fuck` does not stat the Windows PATH (tens of seconds on WSL).
+export THEFUCK_EXCLUDED_SEARCH_PATH_PREFIXES="${THEFUCK_EXCLUDED_SEARCH_PATH_PREFIXES:-/mnt}"
 if command -v thefuck >/dev/null 2>&1; then
   if _thefuck_init="$(thefuck --alias fuck 2>/dev/null)"; then
     dotfiles_log "${BIRed}Setting Up thefuck...\n"
