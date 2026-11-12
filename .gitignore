@@ -18,3 +18,6 @@ zsh/zshrc.local
 Thumbs.db
 *.swp
 *~
+
+# Compiled zsh caches (zcompile output, regenerated automatically)
+*.zwc
